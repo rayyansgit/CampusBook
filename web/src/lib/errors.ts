@@ -1,0 +1,32 @@
+// SHARED FILE. Turns database error codes into plain language (SRS NFR-USE-03).
+const MESSAGES: Record<string, string> = {
+  NOT_AUTHENTICATED: 'Please sign in first.',
+  ACCOUNT_INACTIVE: 'Your account is deactivated. Contact the Facilities Office.',
+  DOMAIN_NOT_ALLOWED: 'Only IBA email addresses can register.',
+  RESOURCE_UNAVAILABLE: 'This resource is not available for booking right now.',
+  ROLE_NOT_ALLOWED: 'Your account type is not allowed to book this resource.',
+  INVALID_RANGE: 'The end time must be after the start time.',
+  IN_PAST: 'You cannot book a time in the past.',
+  BEYOND_ADVANCE_WINDOW: 'This is too far ahead. Pick a nearer date.',
+  DURATION_LIMITS: 'The booking is shorter or longer than this resource allows.',
+  SLOT_ALIGNMENT: 'Start and end times must fall on the resource\'s slot boundaries (e.g. every 30 minutes).',
+  OUTSIDE_HOURS: 'This resource is not bookable at those hours.',
+  OVER_CAPACITY: 'Too many attendees for this resource.',
+  BLACKOUT: 'This time is blocked (maintenance, exams or an event).',
+  PURPOSE_REQUIRED: 'This resource needs admin approval - please describe the purpose.',
+  SLOT_TAKEN: 'Someone else just booked that slot. Pick another time.',
+  NOT_FOUND: 'We could not find that booking.',
+  FORBIDDEN: 'You are not allowed to do that.',
+  NOT_CANCELLABLE: 'This booking can no longer be cancelled.',
+  ALREADY_STARTED: 'This booking has already started.',
+  NOT_PENDING: 'This request has already been decided.',
+  REASON_REQUIRED: 'Please write a reason when rejecting.',
+};
+
+export function friendlyError(err: unknown): string {
+  const msg = (err as { message?: string })?.message ?? String(err);
+  const code = Object.keys(MESSAGES).find((c) => msg.includes(c));
+  if (code) return MESSAGES[code];
+  if (/Database error saving new user/i.test(msg)) return MESSAGES.DOMAIN_NOT_ALLOWED;
+  return 'Something went wrong. Please try again.';
+}

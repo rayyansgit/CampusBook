@@ -1,0 +1,56 @@
+name: Deploy to GitHub Pages
+# Runs automatically on every push to main.
+# ROLLBACK: Actions tab -> "Deploy to GitHub Pages" -> Run workflow -> type a tag
+# (e.g. s1-cp1) or commit SHA in "ref". That redeploys the old version in ~2 min.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "Git tag / branch / SHA to deploy (leave empty = main)"
+        required: false
+        default: ""
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: web
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.inputs.ref || github.ref }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+      - run: npm ci
+      - run: npm run build
+        env:
+          NEXT_PUBLIC_BASE_PATH: /${{ github.event.repository.name }}
+          NEXT_PUBLIC_SUPABASE_URL: ${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}
+          NEXT_PUBLIC_FLAG_WAITLIST: "false"
+          NEXT_PUBLIC_FLAG_RECURRING: "false"
+          NEXT_PUBLIC_FLAG_QUOTAS: "false"
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web/out
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
