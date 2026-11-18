@@ -1,7 +1,5 @@
 # IBA CampusBook
 
-https://rayyansgit.github.io/CampusBook
-
 Centralized campus resource booking for IBA Karachi. 
 Student project (ERP: 30530, 31629, 30598, 30483, 30537)
 
