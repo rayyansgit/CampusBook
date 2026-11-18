@@ -60,7 +60,7 @@ cp .env.example .env.local     # paste URL + anon key from the lead
 npm install
 npm run dev
 ```
-Open http://localhost:3000. Then read `docs/WORKFLOW.md` and `docs/PROMPTS.md`, and create your first branch.
+Open http://localhost:3000. Then read `docs/WORKFLOW.md`, and create your first branch.
 
 ## Person A only: Supabase CLI (optional)
 The SQL Editor is enough today. The CLI (`npx supabase login`, `npx supabase link --project-ref <ref>`, `npx supabase db push`) is for later.

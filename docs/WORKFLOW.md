@@ -22,7 +22,6 @@ git push -u origin d/booking-form        # then open a Pull Request on GitHub
 PRs should be small (under ~300 lines). Two small PRs beat one giant one: easier review, easier undo.
 
 ## Working with AI safely
-- Start every AI session by giving it `CLAUDE.md` + the wireframe page + the card text (see PROMPTS.md).
 - Ask for **small steps** and an explanation. "Make the login page" is fine; "build the whole app" is not.
 - **Commit before every big AI edit.** If it makes a mess: `git restore .` (discard uncommitted) or `git reset --hard HEAD` (back to last commit).
 - AI must not touch files outside your area. If it wants to, stop and ask in chat.

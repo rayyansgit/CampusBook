@@ -47,7 +47,6 @@ Works in the browser (you clicked it) - `npm run typecheck` + `npm run build` pa
 ## Risks and fallbacks
 | Risk | Fallback |
 |---|---|
-| Nobody on the team knows Next.js/Supabase | AI-led is fine: use `docs/PROMPTS.md`; stubs show exactly what each page calls |
 | Supabase email limits block sign-up testing | "Confirm email" is OFF in dev; for demo use custom SMTP, or leave off and demo with pre-made accounts |
 | DB trigger blocks legitimate sign-ups | Run `rollback/...0002_down.sql`; client-side domain check stays |
 | Bad migration / RPC bug | Run rollbacks in reverse order, re-run fixed migration (ROLLBACK.md) |
