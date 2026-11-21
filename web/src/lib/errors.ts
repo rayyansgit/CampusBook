@@ -23,7 +23,24 @@ const MESSAGES: Record<string, string> = {
   REASON_REQUIRED: 'Please write a reason when rejecting.',
 };
 
+// Supabase Auth error codes (sign-in, sign-up, verification, password reset).
+const AUTH_MESSAGES: Record<string, string> = {
+  invalid_credentials: 'Wrong email or password.',
+  email_not_confirmed: 'Verify your email first: enter the 6-digit code from the Register page.',
+  otp_expired: 'That code is wrong or has expired. Request a new one.',
+  over_email_send_rate_limit: 'Too many emails sent. Wait a few minutes and try again.',
+  over_request_rate_limit: 'Too many attempts. Wait a minute and try again.',
+  weak_password: 'That password is too weak. Use at least 8 characters.',
+  user_already_exists: 'An account with this email already exists. Sign in instead.',
+  email_exists: 'An account with this email already exists. Sign in instead.',
+  same_password: 'Your new password must be different from the old one.',
+  user_banned: 'Your account is deactivated. Contact the Facilities Office.',
+};
+
 export function friendlyError(err: unknown): string {
+  const authCode = (err as { code?: string })?.code;
+  if (authCode && AUTH_MESSAGES[authCode]) return AUTH_MESSAGES[authCode];
+  if ((err as { status?: number })?.status === 429) return AUTH_MESSAGES.over_request_rate_limit;
   const msg = (err as { message?: string })?.message ?? String(err);
   const code = Object.keys(MESSAGES).find((c) => msg.includes(c));
   if (code) return MESSAGES[code];
